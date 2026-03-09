@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>HabitTracker</title>
+    <link rel="stylesheet" href="/css/stylesheet.css">
+</head>
+<body>
+    <main>
+        <section class="welcome-section">
+            <img src="/images/habit-image.jpg" alt="Illustration of connected habits">
+            <h1 class="welcome-text header1">Track. Grow. Evolve.</h1>
+            <p class="welcome-text">Every habit brings you closer to your goals.</p>
+        </section>
+        <section class="log-in-section">
+            <div class="logo-container">
+                 <h2 class="logo">HabitTracker</h2>
+            </div>  
+            <div class="log-in-container">
+                <form class="log-in-form" action="/login" method="post">
+                <fieldset>
+                    <legend>Log in</legend>
+                    <p class="subtext">Welcome back! Track your habits with ease.</p>
+
+                    <div th:if="${param.error}" class="error-message"
+                         th:switch="${param.error[0]}">
+
+                        <p th:case="'no_user'">No account found with this email.</p>
+                        <p th:case="'bad_password'">Incorrect password. Please try again.</p>
+                        <p th:case="*">Login failed. Please try again.</p>
+
+                    </div>
+                    <div th:if="${param.logout}" class="success-message">
+                        <p>You have been logged out successfully.</p>
+                    </div>
+
+                    <label for="email">Enter your email:</label><br>
+                    <input id="email" name="email" type="email" placeholder="example@com" required>
+                    <br>
+                    <label for="password">Enter your password:</label><br>
+                    <input id="password" name="password" type="password" required>
+                    <br>
+                    <button type="submit">Log in</button>
+                    <p class="register-text">Not registered yet? <a href="/register">Create an account</a></p>
+                </fieldset>
+            </form>
+            </div>         
+        </section>
+    </main>
+
+</body>
+</html>

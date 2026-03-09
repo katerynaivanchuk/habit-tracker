@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <title>HabitTracker</title>
+    <link rel="stylesheet" href="/css/output.css">
+</head>
+
+<body class="bg-linear-to-b from-lightViolet to-white dark:from-[#0d0d0d] dark:to-[#0d0d0d]
+             flex flex-col min-h-screen dark:text-gray-200">
+
+<!-- HEADER -->
+<header class="bg-white dark:bg-[#1a1a1a] shadow-sm dark:shadow-black/40">
+    <nav class="flex items-center justify-center relative px-8 py-4">
+
+        <!-- Left: Logo -->
+        <div class="absolute left-8 flex items-center space-x-2">
+            <span class="text-xl font-semibold text-gray-800 dark:text-gray-100">HabitTracker</span>
+        </div>
+
+        <!-- Center: Nav Links -->
+        <div class="bg-magnolia dark:bg-[#222] rounded-3xl flex items-center px-5 py-1">
+            <ul class="hidden md:flex space-x-7 text-cadetGray dark:text-gray-400 font-normal items-center">
+
+                <li class="bg-violet-500 rounded-3xl py-2 px-4 flex items-center justify-center">
+                    <a href="/dashboard" class="text-white font-medium">Dashboard</a>
+                </li>
+
+                <li>
+                    <a href="/dashboard/my-habits"
+                       class="hover:text-amethyst dark:hover:text-violet-400 transition-colors duration-200">
+                        My Habits
+                    </a>
+                </li>
+
+                <li>
+                    <a href="/dashboard/progress"
+                       class="hover:text-amethyst dark:hover:text-violet-400 transition-colors duration-200">
+                        Progress
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Right: Profile menu -->
+        <div class="absolute right-8 flex items-center space-x-4">
+            <button id="profileButton" class="flex items-center space-x-2 cursor-pointer">
+                <img th:src="${user.profileImage != null ? user.profileImage : '/images/default-profile.jpg'}"
+                     class="w-14 h-14 rounded-full border border-gray-300 dark:border-gray-600 object-cover"
+                     alt="User Photo"/>
+            </button>
+
+            <div id="profileMenu"
+                 class="hidden absolute right-2 top-12 w-44 bg-white dark:bg-[#1f1f1f]
+                        border border-gray-200 dark:border-gray-700 rounded-xl
+                        shadow-lg dark:shadow-black/40 z-20 transition duration-200">
+
+                <a href="/profile"
+                   class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200
+                          hover:bg-violet-50 dark:hover:bg-[#333] hover:text-amethyst dark:hover:text-violet-300">
+                    Profile
+                </a>
+
+                <a href="/settings"
+                   class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200
+                          hover:bg-violet-50 dark:hover:bg-[#333] hover:text-amethyst dark:hover:text-violet-300">
+                    Settings
+                </a>
+
+                <a href="#" class="logOutBtn block px-4 py-2 text-sm text-gray-700 dark:text-gray-200
+                                  hover:bg-violet-50 dark:hover:bg-[#333] hover:text-red-600">
+                    Log out
+                </a>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<!-- MAIN -->
+<main class="bg-white dark:bg-[#161616] rounded-4xl my-6 mx-4
+             border border-gray-100 dark:border-gray-700
+             shadow-md dark:shadow-black/40 flex flex-col overflow-hidden h-[87vh]">
+
+
+    <!-- Greeting -->
+    <section class="bg-lightViolet dark:bg-[#1e1e2e] rounded-[50px] mx-6 mt-6 p-6
+                     border border-violet-200 dark:border-gray-700 shadow-sm">
+        <h1 class="font-medium text-3xl mb-2 text-gray-800 dark:text-gray-100">
+            Welcome back, <span th:text="${userName}">User</span>!
+        </h1>
+        <p class="text-cadetGray dark:text-gray-400 text-md">
+            You're building a life you love — one small step at a time.
+        </p>
+    </section>
+
+
+    <!-- Today -->
+    <section class="bg-white dark:bg-[#1d1d1d] rounded-[50px] p-6 mt-6 mx-6
+                     shadow-sm border border-gray-100 dark:border-gray-700">
+        <div class="flex justify-between items-center mb-4">
+            <div class="flex items-center space-x-2">
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     class="w-5 h-5 text-gray-600 dark:text-gray-300"
+                     fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M8 7V3m8 4V3m-9 8h10m-11 9h12a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v11a2 2 0 002 2z"/>
+                </svg>
+
+                <span class="text-gray-800 dark:text-gray-100 font-medium text-xl">Today</span>
+            </div>
+
+            <span class="text-md text-gray-500 dark:text-gray-400">
+                <span th:text="${completedHabits}">0</span> of
+                <span th:text="${totalHabits}">0</span> habits done
+            </span>
+        </div>
+
+        <div class="w-full bg-[#FBFAFF] dark:bg-[#272727] border border-gray-200 dark:border-gray-700 rounded-full h-2.5">
+            <div class="bg-violet-400 h-2 rounded-full"
+                 th:style="'width: ' + ${progressPercent} + '%'"></div>
+        </div>
+    </section>
+
+
+    <!-- Daily Habits -->
+    <section class="flex justify-between items-center px-6 mt-8 mb-3">
+        <div class="flex items-center space-x-2">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-8">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0ZM3.75 12h.007v.008H3.75V12Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm-.375 5.25h.007v.008H3.75v-.008Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
+            </svg>
+
+            <span class="text-gray-700 dark:text-gray-200 font-semibold text-2xl">Daily Habits</span>
+        </div>
+
+        <div class="flex items-center space-x-2">
+            <p class="text-cadetGray dark:text-gray-400 mr-4">
+                Mark what you've done — keep it light.
+            </p>
+
+            <button id="addHabitBtn"
+                    class="flex items-center bg-violet-500 text-white px-7 py-2 text-xl rounded-full
+                       hover:bg-violet-600 transition drop-shadow-xl">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                     viewBox="0 0 24 24" stroke-width="1.5"
+                     stroke="currentColor" class="w-5 h-5 mr-1">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                          d="M12 4.5v15m7.5-7.5h-15"/>
+                </svg>
+                Add Habit
+            </button>
+        </div>
+    </section>
+
+    <!-- Habit List -->
+    <section class="flex flex-col space-y-4 overflow-y-auto px-6 pb-6 h-full mt-4">
+
+        <div th:each="habit:${habits}"
+             class="flex justify-between items-center w-full border border-gray-200 dark:border-gray-700
+                    dark:bg-[#1a1a1a] rounded-[50px] px-5 py-3 shrink">
+
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 flex items-center justify-center text-2xl">
+                    <span th:text="${habit.emoji}">😀</span>
+                </div>
+
+                <div class="flex flex-col m-2">
+                    <span class="font-medium text-lg dark:text-gray-100" th:text="${habit.habitName}"></span>
+                    <span class="text-cadetGray dark:text-gray-400 text-md" th:text="${habit.description}"></span>
+                </div>
+            </div>
+
+            <form th:action="@{/habits/{id}/toggle(id=${habit.id})}" method="post">
+                <button type="submit"
+                        th:classappend="${habit.completed}
+                            ? 'bg-green-200 dark:bg-green-700 hover:bg-green-300 dark:hover:bg-green-600'
+                            : 'bg-orange-200 dark:bg-orange-700 hover:bg-orange-300 dark:hover:bg-orange-600'"
+                        class="mark-btn text-center cursor-pointer rounded-full px-7 py-2 text-lg"
+                        th:text="${habit.completed} ? 'Done' : 'Mark as Done'">
+                </button>
+            </form>
+
+        </div>
+    </section>
+
+
+    <!-- Add Habit Modal -->
+    <div id="addHabitModal" class="hidden fixed inset-0 bg-black/30 dark:bg-black/60 items-center justify-center z-50">
+
+        <div class="bg-white dark:bg-[#1c1c1c] rounded-3xl w-[500px] p-6 shadow-2xl dark:shadow-black/40 relative">
+            <button id="closeModal"
+                    class="absolute top-4 right-4 text-gray-400 dark:text-gray-300 hover:text-gray-600">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                     stroke-width="1.5" stroke="currentColor" class="size-6">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                          d="M6 18 18 6M6 6l12 12"/>
+                </svg>
+            </button>
+
+            <h2 class="text-lg font-semibold text-gray-700 dark:text-gray-200 mb-4">
+                Add New Habit
+            </h2>
+
+            <form action="/habits/create" method="post" class="space-y-4">
+
+                <div class="flex justify-between space-x-2">
+
+                    <input required name="habitName" id="habitName" type="text"
+                           placeholder="Habit name"
+                           class="w-full border border-gray-200 dark:border-gray-700
+                                  bg-white dark:bg-[#2a2a2a]
+                                  text-gray-800 dark:text-gray-100
+                                  rounded-xl p-2 focus:ring-2 focus:ring-amethyst">
+
+                    <div class="relative">
+                        <input required name="emoji" id="emojiInput" type="text"
+                               readonly placeholder="😀"
+                               class="w-16 text-center border border-gray-200 dark:border-gray-700
+                                      bg-white dark:bg-[#2a2a2a]
+                                      text-gray-800 dark:text-gray-100
+                                      rounded-xl p-2 text-2xl cursor-pointer">
+
+                        <div id="emojiPicker"
+                             class="hidden absolute top-12 left-0 bg-white dark:bg-[#2a2a2a]
+                                    border border-gray-200 dark:border-gray-700
+                                    rounded-xl shadow-lg dark:shadow-black/40 z-50"></div>
+                    </div>
+                </div>
+
+                <textarea name="description" placeholder="Small description" maxlength="60"
+                          class="w-full border border-gray-200 dark:border-gray-700
+                                 bg-white dark:bg-[#2a2a2a]
+                                 text-gray-800 dark:text-gray-100
+                                 rounded-xl p-2 focus:ring-amethyst"></textarea>
+
+                <div class="relative">
+                    <select required name="category"
+                            class="w-full border border-gray-200 dark:border-gray-700
+                                   bg-white dark:bg-[#2a2a2a]
+                                   text-gray-700 dark:text-gray-200
+                                   rounded-xl p-2 pr-10 appearance-none cursor-pointer">
+                        <option disabled selected>Category: Choose</option>
+                        <option value="Health">Health</option>
+                        <option value="Productivity">Productivity</option>
+                        <option value="Learning">Learning</option>
+                        <option value="Nutrition">Nutrition</option>
+                        <option value="Sleep">Sleep</option>
+                        <option value="Creativity">Creativity</option>
+                        <option value="Self-Care">Self-Care</option>
+                        <option value="Finances">Finances</option>
+                        <option value="Home">Home</option>
+                    </select>
+
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                         viewBox="0 0 24 24" stroke-width="1.5"
+                         stroke="currentColor"
+                         class="absolute right-3 top-3 w-5 h-5 text-gray-400 dark:text-gray-300 pointer-events-none">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                              d="M8.25 9l3.75 3.75L15.75 9"/>
+                    </svg>
+                </div>
+
+                <div class="flex justify-end space-x-3 pt-3">
+                    <button type="button" id="cancelModal"
+                            class="px-4 py-2 bg-gray-100 dark:bg-gray-700
+                                   hover:bg-gray-200 dark:hover:bg-gray-600 rounded-full">
+                        Cancel
+                    </button>
+
+                    <button type="submit"
+                            class="px-4 py-2 bg-violet-500 text-white rounded-full hover:bg-violet-600">
+                        Create Habit
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+
+    <!-- Logout Modal -->
+    <div id="logOutModal"
+         class="hidden fixed inset-0 bg-black/30 dark:bg-black/60 items-center justify-center z-50">
+
+        <div class="bg-white dark:bg-[#1c1c1c] rounded-3xl w-[500px] p-6 shadow-2xl dark:shadow-black/40 relative">
+
+            <button id="closeLogOutModal"
+                    class="absolute top-4 right-4 text-gray-400 dark:text-gray-300 hover:text-gray-600">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                     viewBox="0 0 24 24" stroke-width="1.5"
+                     stroke="currentColor" class="size-6">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                          d="M6 18 18 6M6 6l12 12"/>
+                </svg>
+            </button>
+
+            <div class="flex justify-center items-center mb-3">
+                <div class="bg-magnolia dark:bg-[#2d2d2d] rounded-full p-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                         viewBox="0 0 24 24"
+                         stroke-width="1.5" stroke="currentColor"
+                         class="w-6 h-6 text-violet-500">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                              d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6A2.25 2.25 0 0 0 5.25 5.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9"/>
+                    </svg>
+                </div>
+            </div>
+
+            <div class="flex justify-center items-center">
+                <span class="text-lg font-semibold text-gray-900 dark:text-gray-200">Log Out</span>
+            </div>
+
+            <div class="flex justify-center items-center mt-1">
+                <span class="text-sm text-cadetGray dark:text-gray-400">
+                    Are you sure you want to log out of your account?
+                </span>
+            </div>
+
+            <div class="flex justify-end space-x-3 pt-3 mt-4">
+                <button type="button" id="cancelLogOutModal"
+                        class="px-4 py-2 bg-gray-100 dark:bg-gray-700
+                               hover:bg-gray-200 dark:hover:bg-gray-600 rounded-full">
+                    Cancel
+                </button>
+                <button type="submit" id="logOutConfirmBtn"
+                        class="px-4 py-2 bg-red-500 text-white rounded-full hover:bg-red-700">
+                    Log out
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+</main>
+
+<script src="/js/theme.js"></script>
+<script src="/js/dashboard.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/emoji-mart@5.6.0/dist/browser.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>HabitTracker</title>
+    <link rel="stylesheet" href="/css/output.css">
+</head>
+<body class="bg-linear-to-b from-lightViolet to-white flex flex-col min-h-screen dark:from-[#0d0d0d] dark:to-[#0d0d0d] dark:text-gray-200">
+<header class="bg-white dark:bg-[#1a1a1a] shadow-sm dark:shadow-black/40">
+    <nav class="flex items-center justify-center relative px-8 py-4">
+        <!-- Left: Logo -->
+        <div class="absolute left-8 flex items-center space-x-2">
+            <span class="text-xl font-semibold text-gray-800 dark:text-gray-100">HabitTracker</span>
+        </div>
+
+        <!-- Center: Nav Links -->
+        <div class="bg-magnolia dark:bg-[#222] rounded-3xl flex items-center px-5 py-3">
+            <ul class="hidden md:flex space-x-7 text-cadetGray dark:text-gray-400 font-normal items-center">
+                <li>
+                    <a href="/dashboard" class="hover:text-amethyst dark:hover:text-violet-400 transition-colors duration-200">Dashboard</a>
+                </li>
+                <li><a href="/dashboard/my-habits" class="hover:text-amethyst dark:hover:text-violet-400 transition-colors duration-200">My Habits</a></li>
+                <li><a href="/dashboard/progress" class="hover:text-amethyst dark:hover:text-violet-400 transition-colors duration-200">Progress</a></li>
+            </ul>
+        </div>
+
+        <!-- Right: Profile + Actions -->
+        <div class="absolute right-8 flex items-center space-x-4">
+            <!-- кнопка профілю -->
+            <button id="profileButton" class="flex items-center space-x-2 focus:outline-none cursor-pointer">
+                <img th:src="${user.profileImage != null ? user.profileImage : '/images/default-profile.jpg'}"
+                     class="w-14 h-14 rounded-full border border-gray-300 dark:border-gray-600 object-cover"  alt="User Photo"/>
+            </button>
+
+            <!-- випадаюче меню -->
+            <div id="profileMenu"
+                 class="hidden absolute right-2 top-12 w-44 bg-white dark:bg-[#1f1f1f] border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg dark:shadow-black/40 z-20 transition ease-out duration-200">
+                <a href="/profile"
+                   class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200
+                          hover:bg-violet-50 dark:hover:bg-[#333] hover:text-amethyst dark:hover:text-violet-300">
+                    Profile
+                </a>
+
+                <a href="/settings"
+                   class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200
+                          hover:bg-violet-50 dark:hover:bg-[#333] hover:text-amethyst dark:hover:text-violet-300">
+                    Settings
+                </a>
+
+                <a href="#" class="logOutBtn block px-4 py-2 text-sm text-gray-700 dark:text-gray-200
+                                  hover:bg-violet-50 dark:hover:bg-[#333] hover:text-red-600">
+                    Log out
+                </a>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<!--Settings-->
+    <section class="flex flex-col mt-7 mb-5 mx-5">
+        <span class="text-xl font-medium mb-1 dark:text-white">Settings</span>
+        <span class="text-cadetGray text-md font-normal dark:text-white">Personalize your HabitTracker experience</span>
+    </section>
+
+    <main class="bg-white dark:bg-[#1a1a1a] rounded-4xl my-2 mx-4 border border-gray-100 shadow-md flex flex-col overflow-y-auto h-[87vh]">
+  
+  <!-- Theme -->
+  <section class="flex flex-col bg-lightViolet dark:bg-[#1e1e2e] rounded-3xl mx-6 mt-6 p-6 border border-violet-200 shadow-sm">
+    <div class="flex space-x-2 ">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="mt-0.5 size-6 dark:text-white" >
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z" />
+        </svg>
+        <span class="font-medium text-xl mb-2 text-gray-800 dark:text-white">Theme</span>
+    </div>
+
+    <p class="text-cadetGray font-normal text-md dark:text-gray-200">Switch between light and dark appearance.</p>
+
+    <div class="bg-white dark:bg-[#4B4B6F] rounded-3xl border border-gray-200 px-3 py-5 flex justify-between mt-3">
+        <div class="flex space-x-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-palette-icon lucide-palette mt-3 dark:text-white">
+                <path d="M12 22a1 1 0 0 1 0-20 10 9 0 0 1 10 9 5 5 0 0 1-5 5h-2.25a1.75 1.75 0 0 0-1.4 2.8l.3.4a1.75 1.75 0 0 1-1.4 2.8z"/><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/>
+            </svg>
+            <div class="border border-gray-200 rounded-full px-3 py-2">
+                <span class="dark:text-white">Appearance</span>
+            </div>
+        </div>
+        <div class="flex items-center justify-center">
+            <div class="bg-white dark:bg-[#2B2B42] border border-gray-300 rounded-full flex p-1 shadow-sm">
+                <!-- Light -->
+                <button id="lightBtn"
+                class="text-gray-500 flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium bg-violet-400  cursor-pointer">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 3v1.5m0 15V21m8.485-8.485H21M3 12H1.5m15.364 6.364L18 19.5m-12-12L5.636 5.636M16.95 7.05l1.414-1.414M7.05 16.95l-1.414 1.414M12 8.25a3.75 3.75 0 1 1 0 7.5a3.75 3.75 0 0 1 0-7.5Z" />
+                </svg>
+                Light
+                </button>
+
+                <!-- Dark -->
+                <button id="darkBtn"
+                class="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium text-gray-500  cursor-pointer">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M21.752 15.002A9.718 9.718 0 0 1 12.002 21a9.718 9.718 0 0 1-9.75-9.748a9.715 9.715 0 0 1 8.126-9.61a.75.75 0 0 1 .84.98A7.5 7.5 0 0 0 19.5 15.25a.75.75 0 0 1 .982.84c-.1.435-.228.864-.37 1.28Z" />
+                </svg>
+                Dark
+                </button>
+            </div>
+        </div>
+    </div>
+  </section>
+
+  <!-- Language-->
+  <section class="flex flex-col bg-lightViolet dark:bg-[#1e1e2e] rounded-3xl mx-6 mt-6 p-6 border border-violet-200 shadow-sm">
+    <div class="flex space-x-2 ">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 dark:text-white">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m10.5 21 5.25-11.25L21 21m-9-3h7.5M3 5.621a48.474 48.474 0 0 1 6-.371m0 0c1.12 0 2.233.038 3.334.114M9 5.25V3m3.334 2.364C11.176 10.658 7.69 15.08 3 17.502m9.334-12.138c.896.061 1.785.147 2.666.257m-4.589 8.495a18.023 18.023 0 0 1-3.827-5.802" />
+        </svg>
+        <span class="font-medium text-xl mb-2 text-gray-800 dark:text-white">Language</span>
+    </div>
+
+    <p class="text-cadetGray font-normal text-md dark:text-gray-200">Choose your preferred language.</p>
+
+    <div class="bg-white dark:bg-[#4B4B6F] rounded-3xl border border-gray-200 px-3 py-5 flex justify-between mt-3">
+        <div class="flex space-x-2">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class=" mt-2 size-7 dark:text-white">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 0 0 8.716-6.747M12 21a9.004 9.004 0 0 1-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 0 1 7.843 4.582M12 3a8.997 8.997 0 0 0-7.843 4.582m15.686 0A11.953 11.953 0 0 1 12 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0 1 21 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0 1 12 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 0 1 3 12c0-1.605.42-3.113 1.157-4.418" />
+            </svg>
+            <div class="border border-gray-200 rounded-full px-3 py-2">
+                <span class="dark:text-white">App Language</span>
+            </div>
+        </div>
+        <div class="flex items-center justify-center">
+            <div class="bg-white dark:bg-[#2B2B42] border border-gray-300 rounded-full flex p-1 shadow-sm">
+                <!-- Light -->
+                <button id="lightENBtn"
+                class="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium bg-violet-400 text-white cursor-pointer">
+                
+                EN
+                </button>
+
+                <!-- Dark -->
+                <button id="darkUABtn"
+                class="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium text-gray-500 hover:text-gray-700 cursor-pointer">
+                
+                UA
+                </button>
+            </div>
+        </div>
+    </div>
+  </section>
+
+  <!-- Motivation-->
+  <section class="flex flex-col bg-lightViolet dark:bg-[#1e1e2e] rounded-3xl mx-6 mt-6 p-6 border border-violet-200 shadow-sm mb-8">
+    <div class="flex space-x-2 ">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class=" mt-0.5 lucide lucide-quote-icon lucide-quote dark:text-white">
+            <path d="M16 3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2 1 1 0 0 1 1 1v1a2 2 0 0 1-2 2 1 1 0 0 0-1 1v2a1 1 0 0 0 1 1 6 6 0 0 0 6-6V5a2 2 0 0 0-2-2z"/><path d="M5 3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2 1 1 0 0 1 1 1v1a2 2 0 0 1-2 2 1 1 0 0 0-1 1v2a1 1 0 0 0 1 1 6 6 0 0 0 6-6V5a2 2 0 0 0-2-2z"/>
+        </svg>
+        <span class="font-medium text-xl mb-2 text-gray-800 dark:text-white">Motivation</span>
+    </div>
+
+    <p class="text-cadetGray font-normal text-md dark:text-gray-200">A gentle nudge to keep you going.</p>
+
+    <div class="bg-white dark:bg-[#4B4B6F] rounded-3xl flex justify-center items-center py-5 mt-3">
+        <div class="flex flex-col items-center text-center space-y-2 ">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class=" text-cadetGray mt-0.5 lucide lucide-quote-icon lucide-quote dark:text-white">
+                <path d="M16 3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2 1 1 0 0 1 1 1v1a2 2 0 0 1-2 2 1 1 0 0 0-1 1v2a1 1 0 0 0 1 1 6 6 0 0 0 6-6V5a2 2 0 0 0-2-2z"/><path d="M5 3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2 1 1 0 0 1 1 1v1a2 2 0 0 1-2 2 1 1 0 0 0-1 1v2a1 1 0 0 0 1 1 6 6 0 0 0 6-6V5a2 2 0 0 0-2-2z"/>
+            </svg>
+            <span class="dark:text-white">«Success is the product of daily habits — not once-in-a-lifetime transformations.»</span>
+        </div>
+    </div>
+  </section>
+
+
+
+        <!-- Logout Modal -->
+        <div id="logOutModal"
+             class="hidden fixed inset-0 bg-black/30 dark:bg-black/60 items-center justify-center z-50">
+
+            <div class="bg-white dark:bg-[#1c1c1c] rounded-3xl w-[500px] p-6 shadow-2xl dark:shadow-black/40 relative">
+
+                <button id="closeLogOutModal"
+                        class="absolute top-4 right-4 text-gray-400 dark:text-gray-300 hover:text-gray-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                         viewBox="0 0 24 24" stroke-width="1.5"
+                         stroke="currentColor" class="size-6">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                              d="M6 18 18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+
+                <div class="flex justify-center items-center mb-3">
+                    <div class="bg-magnolia dark:bg-[#2d2d2d] rounded-full p-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                             viewBox="0 0 24 24"
+                             stroke-width="1.5" stroke="currentColor"
+                             class="w-6 h-6 text-violet-500">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                  d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6A2.25 2.25 0 0 0 5.25 5.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9"/>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="flex justify-center items-center">
+                    <span class="text-lg font-semibold text-gray-900 dark:text-gray-200">Log Out</span>
+                </div>
+
+                <div class="flex justify-center items-center mt-1">
+                <span class="text-sm text-cadetGray dark:text-gray-400">
+                    Are you sure you want to log out of your account?
+                </span>
+                </div>
+
+                <div class="flex justify-end space-x-3 pt-3 mt-4">
+                    <button type="button" id="cancelLogOutModal"
+                            class="px-4 py-2 bg-gray-100 dark:bg-gray-700
+                               hover:bg-gray-200 dark:hover:bg-gray-600 rounded-full">
+                        Cancel
+                    </button>
+                    <button type="submit" id="logOutConfirmBtn"
+                            class="px-4 py-2 bg-red-500 text-white rounded-full hover:bg-red-700">
+                        Log out
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
+    </main>
+    <script src="/js/theme.js"></script>
+  <script src="/js/settings.js"></script>
+
+</body>
+</html>
